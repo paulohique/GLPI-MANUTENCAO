@@ -1,5 +1,4 @@
 import { type DevicesPage, type DevicesQuery, type DeviceRow } from "@/models/device";
-import { getMockDevices } from "@/services/mockDevices";
 
 function includesCI(haystack: string, needle: string) {
   return haystack.toLowerCase().includes(needle.toLowerCase());
@@ -50,13 +49,13 @@ export async function getDevices(query: DevicesQuery): Promise<DevicesPage> {
 
     const data = await res.json();
     const items = (data.items ?? []).map((r: any, idx: number) => {
-      const status = String(r.status ?? "Pendente");
+      const status = String(r.maintenance_status ?? "Pendente");
       const mapStatus =
         status === "Em Dia" || status === "Atrasada" || status === "Pendente"
           ? status
           : "Pendente";
       return {
-        id: String(r.glpi_id ?? idx),
+        id: String(r.id ?? idx),
         device_name: r.name ?? `GLPI-${r.glpi_id}`,
         maintenance_status: mapStatus,
         last_maintenance_date: r.last_maintenance

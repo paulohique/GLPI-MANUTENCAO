@@ -25,6 +25,7 @@ export default async function Page({
 }: {
   searchParams?: Record<string, string | string[] | undefined>;
 }) {
+  const hasBackend = Boolean(process.env.NEXT_PUBLIC_PY_API_URL);
   const tab = normalizeTab(
     typeof searchParams?.tab === "string" ? searchParams?.tab : undefined
   );
@@ -146,7 +147,11 @@ export default async function Page({
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       <p className="text-sm font-medium">Nenhum dispositivo encontrado</p>
-                      <p className="text-xs text-gray-400">Configure a variável NEXT_PUBLIC_PY_API_URL para conectar ao backend</p>
+                      {!hasBackend ? (
+                        <p className="text-xs text-gray-400">Configure a variável NEXT_PUBLIC_PY_API_URL para conectar ao backend</p>
+                      ) : (
+                        <p className="text-xs text-gray-400">Rode o sync do GLPI no backend para importar dados</p>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

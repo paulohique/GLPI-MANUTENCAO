@@ -59,6 +59,14 @@ class MaintenanceCreate(BaseModel):
     technician: Optional[str] = None
     next_due_days: Optional[int] = None
 
+
+class MaintenanceUpdate(BaseModel):
+    maintenance_type: Optional[str] = Field(None, pattern="^(Preventiva|Corretiva)$")
+    description: Optional[str] = None
+    performed_at: Optional[datetime] = None
+    technician: Optional[str] = None
+    next_due_days: Optional[int] = None
+
 class MaintenanceOut(BaseModel):
     id: int
     computer_id: int
@@ -76,6 +84,11 @@ class MaintenanceOut(BaseModel):
 class NoteCreate(BaseModel):
     content: str
     author: str = "Sistema"
+
+
+class NoteUpdate(BaseModel):
+    content: Optional[str] = None
+    author: Optional[str] = None
 
 class NoteOut(BaseModel):
     id: int
@@ -124,3 +137,14 @@ class SyncResult(BaseModel):
     computers_synced: int
     components_synced: int
     message: str
+
+
+class SyncStatus(BaseModel):
+    running: bool
+    started_at: Optional[datetime] = None
+    finished_at: Optional[datetime] = None
+    computers_synced: int = 0
+    components_synced: int = 0
+    current_glpi_id: Optional[int] = None
+    message: Optional[str] = None
+    last_error: Optional[str] = None

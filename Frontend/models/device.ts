@@ -22,37 +22,49 @@ export type DevicesPage = {
   total: number;
 };
 
-// Tipos para o detalhe do dispositivo (visualizar)
-export type DeviceComponent = {
-  type: string;
+// Tipos do backend (FastAPI) para o detalhe do dispositivo
+export type DeviceDetail = {
+  id: number;
+  glpi_id: number;
   name: string;
-  manufacturer?: string;
-  model?: string;
-  serial?: string;
-  [key: string]: any;
+  serial: string | null;
+  location: string | null;
+  entity: string | null;
+  patrimonio: string | null;
+  status: string | null;
+  last_maintenance: string | null;
+  next_maintenance: string | null;
+};
+
+export type DeviceComponent = {
+  id: number;
+  computer_id: number;
+  component_type: string;
+  name: string | null;
+  manufacturer: string | null;
+  model: string | null;
+  serial: string | null;
+  capacity: string | null;
+  component_data?: any;
+  created_at?: string;
 };
 
 export type DeviceNote = {
-  id: string;
-  date: string;
+  id: number;
+  computer_id: number;
   author: string;
   content: string;
+  created_at: string;
+  updated_at: string;
 };
 
-export type DeviceDetail = {
-  id: string;
-  name: string;
-  serial?: string;
-  location?: string;
-  department?: string;
-  status?: string;
-  components: DeviceComponent[];
-  notes: DeviceNote[];
-  maintenance_history: Array<{
-    id: string;
-    type: "Preventiva" | "Corretiva";
-    date: string;
-    description: string;
-    technician?: string;
-  }>;
+export type DeviceMaintenance = {
+  id: number;
+  computer_id: number;
+  maintenance_type: "Preventiva" | "Corretiva";
+  description: string;
+  performed_at: string;
+  technician: string | null;
+  next_due: string | null;
+  created_at: string;
 };

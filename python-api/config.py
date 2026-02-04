@@ -1,3 +1,5 @@
+import os
+
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
@@ -9,7 +11,7 @@ class Settings(BaseSettings):
     DB_NAME: str = "glpi_manutencao"
     
     # GLPI API
-    GLPI_BASE_URL: str = "http://172.16.0.40/glpi/apirest.php"
+    GLPI_BASE_URL: str = "http://suporte.barbacena.mg.gov.br:8585/glpi/apirest.php"
     GLPI_APP_TOKEN: str
     GLPI_USER_TOKEN: str
     
@@ -18,7 +20,7 @@ class Settings(BaseSettings):
     MAINTENANCE_INTERVAL_DAYS: int = 365
     
     class Config:
-        env_file = ".env"
+        env_file = os.path.join(os.path.dirname(__file__), ".env")
         case_sensitive = True
 
 settings = Settings()

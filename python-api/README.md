@@ -22,6 +22,15 @@ cp .env.example .env
 # Editar .env com suas credenciais GLPI
 ```
 
+Se ao testar a API você receber `Access denied for user 'glpi_user'@'localhost'`, a senha do usuário no MySQL não está batendo com a do `.env`.
+
+Para resetar a senha para `0000` usando PowerShell (vai pedir a senha do `root`):
+
+```powershell
+Set-Location "c:\Users\paulo\OneDrive\Documentos\Project"
+Get-Content .\python-api\reset_glpi_user_password.sql | & "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -uroot -p
+```
+
 ### Docker
 
 ```bash
@@ -86,10 +95,17 @@ docker-compose up -d
 3. Configurar no `.env`:
 
 ```env
-GLPI_BASE_URL=http://172.16.0.40/glpi/apirest.php
+GLPI_BASE_URL=http://suporte.barbacena.mg.gov.br:8585/glpi/apirest.php
 GLPI_APP_TOKEN=seu_app_token
 GLPI_USER_TOKEN=seu_user_token
 ```
+
+### Problema comum: `ERROR_NOT_ALLOWED_IP`
+
+Se o `initSession` retornar `ERROR_NOT_ALLOWED_IP`, o GLPI está bloqueando seu IP na configuração do **cliente da API**.
+Entre em **Configurar/Setup → Geral/General → API → Clientes da API (API clients)** e, no cliente do seu `App-Token`, adicione o IP do servidor que está rodando a Python API.
+
+Exemplo: se a mensagem mostrar `(172.16.1.254)`, é esse IP que precisa ser permitido.
 
 ## 🎯 Próximos Passos
 
