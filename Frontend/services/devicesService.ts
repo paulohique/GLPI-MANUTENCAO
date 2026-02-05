@@ -1,4 +1,5 @@
 import { type DevicesPage, type DevicesQuery, type DeviceRow } from "@/models/device";
+import { getToken } from "@/lib/auth";
 
 function includesCI(haystack: string, needle: string) {
   return haystack.toLowerCase().includes(needle.toLowerCase());
@@ -35,7 +36,15 @@ export async function getDevices(query: DevicesQuery): Promise<DevicesPage> {
     url.searchParams.set("page_size", String(query.pageSize));
     if (query.q) url.searchParams.set("q", query.q);
 
-    const res = await fetch(url.toString(), { cache: "no-store" });
+    const token = getToken();
+    const res = await fetch(url.toString(), {
+      cache: "no-store",
+      headers: token ? ({ Authorization: `Bearer ${token}` } as HeadersInit) : undefined
+    });
+
+    if (res.status === 401) {
+      throw new Error("Não autenticado. Faça login para listar dispositivos.");
+    }
     
     if (!res.ok) {
       console.error(`Erro ao buscar dispositivos: ${res.status} ${res.statusText}`);

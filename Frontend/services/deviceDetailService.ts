@@ -21,21 +21,24 @@ function authHeaders() {
 
 export async function getDeviceDetail(deviceId: string): Promise<DeviceDetail> {
   const url = `${getBaseUrl()}/api/devices/${encodeURIComponent(deviceId)}`;
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { cache: "no-store", headers: authHeaders() });
+  if (res.status === 401) throw new Error("Não autenticado. Faça login para acessar o dispositivo.");
   if (!res.ok) throw new Error(`Falha ao carregar device: ${res.status}`);
   return res.json();
 }
 
 export async function getDeviceComponents(deviceId: string): Promise<DeviceComponent[]> {
   const url = `${getBaseUrl()}/api/devices/${encodeURIComponent(deviceId)}/components`;
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { cache: "no-store", headers: authHeaders() });
+  if (res.status === 401) throw new Error("Não autenticado. Faça login para ver componentes.");
   if (!res.ok) throw new Error(`Falha ao carregar componentes: ${res.status}`);
   return res.json();
 }
 
 export async function getDeviceNotes(deviceId: string): Promise<DeviceNote[]> {
   const url = `${getBaseUrl()}/api/devices/${encodeURIComponent(deviceId)}/notes`;
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { cache: "no-store", headers: authHeaders() });
+  if (res.status === 401) throw new Error("Não autenticado. Faça login para ver notas.");
   if (!res.ok) throw new Error(`Falha ao carregar notas: ${res.status}`);
   return res.json();
 }
@@ -77,7 +80,8 @@ export async function deleteDeviceNote(deviceId: string, noteId: number) {
 
 export async function getDeviceMaintenance(deviceId: string): Promise<DeviceMaintenance[]> {
   const url = `${getBaseUrl()}/api/devices/${encodeURIComponent(deviceId)}/maintenance`;
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { cache: "no-store", headers: authHeaders() });
+  if (res.status === 401) throw new Error("Não autenticado. Faça login para ver manutenções.");
   if (!res.ok) throw new Error(`Falha ao carregar manutenções: ${res.status}`);
   return res.json();
 }

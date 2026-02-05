@@ -1,4 +1,5 @@
 import { type MaintenanceReportQuery, type MaintenanceReportResponse } from "@/models/report";
+import { getToken } from "@/lib/auth";
 
 export async function getMaintenanceReport(
   query: MaintenanceReportQuery
@@ -14,7 +15,12 @@ export async function getMaintenanceReport(
       url.searchParams.set("maintenance_type", query.maintenance_type);
     }
 
-    const res = await fetch(url.toString(), { cache: "no-store" });
+    const token = getToken();
+    const res = await fetch(url.toString(), {
+      cache: "no-store",
+      headers: token ? ({ Authorization: `Bearer ${token}` } as HeadersInit) : undefined
+    });
+    if (res.status === 401) throw new Error("Não autenticado");
     if (!res.ok) return null;
     const data = await res.json();
     return {

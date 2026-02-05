@@ -118,9 +118,12 @@ def ldap_authenticate(username: str, password: str) -> Dict[str, Any]:
     sam = username.split("\\")[-1].split("@")[0]
     if base_dn:
         try:
+            from ldap3.utils.conv import escape_filter_chars
+
+            safe_sam = escape_filter_chars(sam)
             conn.search(
                 search_base=base_dn,
-                search_filter=f"(&(objectClass=user)(sAMAccountName={sam}))",
+                search_filter=f"(&(objectClass=user)(sAMAccountName={safe_sam}))",
                 attributes=["displayName", "mail", "memberOf"],
             )
             if conn.entries:
