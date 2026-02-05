@@ -43,6 +43,27 @@ def _dropdown_str(value) -> str:
     return str(value)
 
 
+def _component_name(item_type: str, item: Dict[str, Any]) -> str:
+    direct = item.get("designation") or item.get("name")
+    if direct:
+        return _dropdown_str(direct)
+
+    type_key_map = {
+        "Item_DeviceProcessor": "deviceprocessors_id",
+        "Item_DeviceMemory": "devicememories_id",
+        "Item_DeviceHardDrive": "deviceharddrives_id",
+        "Item_DeviceNetworkCard": "devicenetworkcards_id",
+        "Item_DeviceGraphicCard": "devicegraphiccards_id",
+        "Item_DeviceMotherboard": "devicemotherboards_id",
+        "Item_DevicePowerSupply": "devicepowersupplies_id",
+    }
+    fallback_key = type_key_map.get(item_type)
+    if fallback_key:
+        return _dropdown_str(item.get(fallback_key))
+
+    return ""
+
+
 def _set_sync_state(**kwargs):
     _sync_state.update(kwargs)
 
@@ -117,7 +138,7 @@ async def sync_glpi_computers_impl(db: Session) -> SyncResult:
                             component = ComputerComponent(
                                 computer_id=computer.id,
                                 component_type=comp_type.replace("Item_Device", ""),
-                                name=_dropdown_str(item.get("designation")),
+                                name=_component_name(comp_type, item),
                                 manufacturer=_dropdown_str(item.get("manufacturers_id")),
                                 model=_dropdown_str(item.get("devicemodels_id")),
                                 serial=_dropdown_str(item.get("serial")),
