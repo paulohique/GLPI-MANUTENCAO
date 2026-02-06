@@ -115,6 +115,40 @@ Quando quiser reativar a autenticação no futuro, basta voltar para:
 AUTH_ENABLED=true
 ```
 
+## ⏰ Rodar sync automático 1x por dia (WSL)
+
+Existe um script pronto para rodar o sync uma vez e salvar log em `python-api/logs/`:
+
+- [python-api/tools/daily_sync.sh](python-api/tools/daily_sync.sh)
+
+### Opção A) Cron dentro do WSL (mais simples se o WSL ficar ligado)
+
+1) Torne o script executável:
+
+```bash
+chmod +x python-api/tools/daily_sync.sh
+```
+
+2) Edite seu crontab:
+
+```bash
+crontab -e
+```
+
+3) Agende (exemplo: todo dia às 03:00). Use caminho ABSOLUTO até o script:
+
+```cron
+0 3 * * * /bin/bash /ABSOLUTE/PATH/TO/Project/python-api/tools/daily_sync.sh
+```
+
+### Opção B) Agendador do Windows chamando WSL (se o WSL “dorme”)
+
+Se o WSL não estiver rodando 24/7, você pode criar uma tarefa no Windows para executar:
+
+```powershell
+wsl -d <SuaDistro> -- bash -lc "/ABSOLUTE/PATH/TO/Project/python-api/tools/daily_sync.sh"
+```
+
 ## 🎯 Próximos Passos
 
 - [ ] Autenticação JWT
